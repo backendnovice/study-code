@@ -1,0 +1,11 @@
+# folders
+.idea/
+.gradle/
+gradle/
+build/
+
+# files
+build.gradle.kts
+gradlew
+gradlew.bat
+settings.gradle.kts
