@@ -1,7 +1,5 @@
 package level1;
 
-import java.util.Arrays;
-
 public class FindKimSeobang {
     public String solution(String[] seoul) {
         final int LENGTH = seoul.length;
@@ -15,5 +13,13 @@ public class FindKimSeobang {
         }
         
         return result;
+    }
+    
+    public static class DistNumberRoot {
+        public long solution(long n) {
+            double result = Math.sqrt(n);
+            
+            return (result == (int)result) ? (long)Math.pow(result + 1, 2) : -1;
+        }
     }
 }
