@@ -71,3 +71,134 @@ JIT(Just In Time) 방식의 컴파일 환경 기반의 안드로이드 전용 �
 **ART(Android Runtime)**
 
 앱을 설치하기 전에 컴파일을 마치고 실행하는 안드로이드 가상머신으로 Dex(Dalvik Executable) 형식의 바이트 코드를 실행한다.
+
+## 2장. View
+
+### View 소개
+
+View는 안드로이드 기본 화면을 구성하는 기본 요소이다. View는 위젯과 레이아웃으로 구분할 수 있다.
+
+**위젯(Widget)**
+
+View에서 텍스트 입력(TextView), 이미지(ImageView), 버튼(Button), 체크박스(Checkbox) 등의 기능을 제공하는 여러 클래스.
+
+**레이아웃(Layout)**
+
+View에서 화면의 구조를 나타내는 Container, 위젯과 레이아웃을 포함하여 관리하는 View Group의 역할을 수행하는 클래스.
+
+### id 속성
+
+id 속성은 View 명칭을 정의할 수 있다.
+
+| 속성명 | 설명                                                       |
+| ------ | ---------------------------------------------------------- |
+| @      | id를 R.java에 등록하거나, R.java로부터 참조할 때 사용한다. |
+| +      | id를 처음 정의할 때 사용한다.                              |
+| id/    | 안드로이드 변수명을 정의할 때 사용한다.                    |
+| ID     | id/ 뒤의 요소로 속성값의 명칭이다.                         |
+
+**사용례**
+
+- id 속성을 부여.
+
+```xml
+<Button
+    android:id="@+id/button"
+/>
+```
+
+- id 속성을 사용.
+
+```xml
+<TextView
+    android:layout_below="@id/textView"
+/>
+```
+
+### background 속성
+
+background 속성은 View 배경의 색상과 이미지를 설정할 수 있다.
+
+**사용례**
+
+- background 이미지 설정.
+
+```xml
+<Button
+    android:background="@mipmap/ic_launcher"
+/>
+```
+
+- background 색상 설정.
+
+```xml
+<Button
+    android:background="#ffff1326"
+/>
+```
+
+### Rotation 속성
+
+rotation 속성은 View의 각도를 설정한다. rotationX는 수평, rotationY는 수직 각도를 결정한다.
+
+- 각도를 45도로 설정.
+
+```xml
+<ImageView
+    android:rotation="45"
+/>
+```
+
+### Padding 속성
+
+padding 속성은 View의 안쪽 여백을 설정한다. left, right, top, bottom 속성을 사용할 수 있다.
+
+- 안쪽 여백 50dp 설정.
+
+```xml
+<ImageView
+    android:padding="50dp"
+/>
+```
+
+### Visibility 속성
+
+visibility 속성은 View의 표시 여부를 설정한다.
+
+| 속성명    | 설명                                                    |
+| --------- | ------------------------------------------------------- |
+| visible   | View가 화면에 표시되는 상태.                            |
+| invisible | View가 화면에 표시되지 않지만, 자리는 차지하는 상태.    |
+| gone      | View가 화면에 표시되지 않고, 자리도 차지하지 않는 상태. |
+
+- 이미지를 숨김 설정.
+
+```xml
+<ImageView
+    android:visibility="invisible"
+/>
+```
+
+### Focusable 속성
+
+focusable 속성은 View의 상세 기능 활성화 여부를 설정한다. EditText나 Button과 같이 사용자와 상호작용하는 위젯들은 true로 설정해야 한다.
+
+- EditText focusable 설정.
+
+```xml
+<EditText
+    android:focusable="true"
+/>
+```
+
+### Alpha 속성
+
+alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값을 가지며, 낮을 수록 투명하다.
+
+- Image의 투명도 설정.
+
+```xml
+<ImageView
+    android:alpha="0.5"
+/>
+```
