@@ -202,3 +202,116 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
     android:alpha="0.5"
 />
 ```
+
+## 3장. 문자 및 이미지 출력을 위한 위젯
+
+### TextView
+
+문자열을 화면에 출력하기 위해서 사용하는 위젯.
+
+- 텍스트 내용 설정.
+
+```xml
+<TextView
+    android:text="New Text"
+/>
+```
+
+- strings.xml의 id를 사용.
+
+```xml
+<!-- strings.xml -->
+<resources>
+    <string name="hello_world">Hello World</string>
+</resources>
+
+<!-- activity_main.xml -->
+<TextView
+    android:text="@string/hello_world"
+/>
+```
+
+- textColor 색상 설정.
+
+```xml
+<TextView
+    android:textColor="#ff405aff"
+/>
+```
+
+- textSize 크기 설정.
+
+```xml
+<TextView
+    android:textSize="30dp"
+/>
+```
+
+- textStyle 스타일 설정.
+
+```xml
+<TextView
+    android:textStyle="bold|italic"
+/>
+```
+
+- typeface 글꼴 설정.
+
+```xml
+<TextView
+    android:typeface="sans"
+/>
+```
+
+- singleLine 한 줄 출력 설정.
+
+```xml
+<TextView
+    android:singleLine="true"
+/>
+```
+
+### ImageView
+
+이미지를 화면에 출력하기 위해서 사용하는 위젯.
+
+- 이미지 경로 설정.
+
+```xml
+<ImageView
+    android:src="@mipmap/ic_launcher"
+/>
+```
+
+- 이미지 크기 설정.
+
+```xml
+<ImageView
+    android:maxWidth="100pt"
+    android:minHeight="100pt"
+/>
+```
+
+- 이미지 한계 설정.
+
+```xml
+<ImageView
+    android:adjustViewBounds="true"
+/>
+```
+
+- 이미지 안쪽 여백 여부 설정.
+
+```xml
+<ImageView
+    android:cropToPadding="true"
+/>
+```
+
+- 이미지 크기 조정 기준 설정.
+
+```xml
+<ImageView
+    android:scaleType="fitXY"
+/>
+```
