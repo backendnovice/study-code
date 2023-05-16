@@ -71,3 +71,284 @@ VRAM(Video Random Access Memory)은 GPU 동작에 필요한 프로그램 및 데
 - 프레임 버퍼(Frame Buffer)는 하나의 프레임의 픽셀 값들을 저장하는 버퍼이다.
 - 해상도(Resolution)는 디스플레이 할 수 있는 픽셀의 수이다.
 - 주사변환(Rasterization)은 그래픽스 객체를 이산적인 픽셀 집합으로 표현하는 것이다.
+
+# 2강. 컴퓨터 그래픽스 소프트웨어
+
+## 래스터 그래픽스 영상
+
+래스터 그래픽스 영상의 래스터(Raster)는 CRT의 주사방식에서 유래하였다. 사각형 격자 좌표의 픽셀 배열로 구성되며, 색상과 크기에 따라서 정확도에서 차이를 보인다. 때문에 그림을 확대해도 세밀한 그림을 얻을 수 없다.
+
+관련한 장치로는 디지털 카메라, 스캐너를 들 수 있으며, 소프트웨어로는 MS Paint, Photoshop 등의 이미지 편집 프로그램이 존재한다.
+
+| 확장자 | 설명                                                                                         | 비고                             |
+| ------ | -------------------------------------------------------------------------------------------- | -------------------------------- |
+| TIFF   | 무손실 포맷. 웹과 호환되지 않는 고해상도 이미지에 사용. 레이어를 포함하여 편집에서 유용하다. | Tag Image File Format            |
+| BMP    | 무손실 포맷. 윈도우 환경에서 사용. 이미지 용량이 크다.                                       | Bitmap                           |
+| PNG    | 무손실 포맷. 웹에서 주로 사용. 투명 배경(Transparent) 기능을 지원한다.                       | Portable Network Graphics        |
+| JPEG   | 손실 포맷. 저용량 이미지에 사용. 확장자는 .jpeg가 아닌 .jpg이다.                             | Joint Photographic Exprets Group |
+
+## 벡터 그래픽스 영상
+
+벡터 그래픽스 영상의 벡터(Vector)는 크기와 방향을 나타내는 수학적 용어이다. 직선 및 곡선을 사용하여 그림을 표현하며, 요소의 수에 따라서 크기가 결정된다. 프레젠테이션을 위해 래스터 영상으로 변환하는 렌더링 작업이 필요하다.
+
+관련 소프트웨어는 Adobe Iliustrator, CorelDRAW 등의 편집 프로그램, 3dsMax, Maya 등의 3차원 그래픽 프로그램 등이 있다.
+
+| 확장자 | 설명                                    | 비고                     |
+| ------ | --------------------------------------- | ------------------------ |
+| SVG    | 웹 친화적인 벡터 파일 포맷.             | Scalable Vector Graphics |
+| PDF    | 프레젠테이션, 문서 등에 사용하는 포맷.  | Portable Document Format |
+| EPS    | 전문적인 고품질 이미지에 사용하는 포맷. | Encapsulated PostScript  |
+| WMF    | 윈도우 운영 체제의 백터 파일 포맷.      | Windows Meta File        |
+| DXF    | 2D, 3D 도면에 사용하는 벡터 파일 포맷.  | Drawing Exchange Format  |
+
+## 컴퓨터 그래픽스 패키지
+
+특수목적 패키지는 특정 응용 분야에 특화된 그래픽 결과물을 생성하기 위한 그래픽스 패키지이다.
+
+- 건축, 기계, 전자회로 등의 하드웨어를 설계하는 CAD 패키지 프로그램.
+- 래스터 그림 및 사진들을 편집하는 페인트 패키지 프로그램.
+- 모델링 및 애니메이션을 생성하는 모델링 패키지 프로그램.
+
+범용 그래픽스 API는 C/C++, Java와 같은 프로그래밍 언어에서 프로그래밍할 수 있는 환경을 제공하는 그래픽스 라이브러리이다. 화면 설계 및 렌더링 관련 함수들을 제공한다.
+
+| 수준   | 설명                                                       | 예                           |
+| ------ | ---------------------------------------------------------- | ---------------------------- |
+| 고수준 | 장면 묘사 기능. 다양한 모형들을 객체로 장면을 구성.        | Open Inventor, VRML, Java 3D |
+| 저수준 | 기본요소, 속성지정, 기하변환, 뷰잉등을 정의하는 함수 제공. | GL, OpenGL, Direct3D         |
+
+## OpenGL 프로그래밍
+
+OpenGL은 저수준 절차적 그래픽스 API로서, GL을 다양한 환경에서 활용할 수 있도록 독립적으로 개발되었다.
+
+OpenGL은 하드웨어의 발전에 따라서 기능을 추가한 버젼을 공개하고 있다.
+
+| 버젼       | 변경사항                              | 비고                                               |
+| ---------- | ------------------------------------- | -------------------------------------------------- |
+| OpenGL 1.0 | 고정 기능 그래픽스 파이프라인을 추가. | 고정 개수의 파라미터에 의해 제어하는 파이프라인.   |
+| OpenGL 2.0 | GLSL(OpenGL Shading Language)를 추가. | C언어 기반의 상위 레벨 셰이딩 언어.                |
+| OpenGL 3.0 | 디프리케이션 모델 도입.               | 오래된 접근방식을 탈피하고 새로운 접근방식을 제공. |
+| OpenGL 4.0 | 두 단계의 테셀레이션 셰이더 추가.     | 고차원의 요소들을 저차원의 요소들로 분할.          |
+
+## OpenGL 라이브러리
+
+OpenGL Core Profile은 셰이더 데이터, 상태 설정, 지시 명령 등을 통해 프로그램을 준비한다. OpenGL Compatibility Profile은 구버전과의 호환성을 위해서 제공하는 기능들을 포함한다. 추가적인 라이브러리는 다음과 같다.
+
+| 라이브러리 | 설명                                                    | 비고                       |
+| ---------- | ------------------------------------------------------- | -------------------------- |
+| GLFW       | 화면 설계, 이벤트 처리 등을 제공하는 간단한 API.        | Graphics Library Framework |
+| GLEW       | OpenGL 환경을 확장하여 개선된 개발 환경을 지원하는 API. | OpenGL Extension Wrangler  |
+| GLEE       | OpenGL 프로그램을 위한 단순한 추가 기능을 지원하는 API. | OpenGL Easy Extenstion     |
+| GLUT       | OpenGL 인터페이스의 창 관리를 제공하는 유틸리티 툴킷.   | OpenGL Utility Toolkit     |
+| FreeGLUT   | Deprecated된 GLUT를 대체하기 위해 개발된 라이브러리.    |                            |
+
+## OpenGL 자료형
+
+OpenGL에서 사용하는 특수한 자료형은 다음과 같다.
+
+| 자료형                     | C/C++ 자료형          | 접미사 |
+| -------------------------- | --------------------- | ------ |
+| GLbyte                     | 8비트 정수            | b      |
+| GLshort                    | 16비트 정수           | s      |
+| GLint, GLsizei             | 32비트 정수           | i      |
+| GLfloat, GLclampf          | 32비트 실수           | f      |
+| GLdouble, GLclampd         | 64비트 실수           | d      |
+| GLubyte, GLboolean         | 8비트 부호 없는 정수  | ub     |
+| GLushort                   | 16비트 부호 없는 정수 | us     |
+| GLuint, GLenum, GLbitfield | 32비트 부호 없는 정수 | ui     |
+
+OpenGL에서 사용하는 함수 형식은 다음과 같다.
+
+```cpp
+// return_type  <lib_prefix>FunctionName<arg_count><arg_type>{v}(<arguments>);
+// return_type  : 반환 타입.
+// lib_prefix   : 함수 접두사.
+// FunctionName : 함수 명.
+// arg_count    : 함수가 갖는 인수 수.
+// arg_type     : 인수의 타입.
+// v            : 벡터일 경우 첨가.
+// arguments    : 인수.
+
+void glClear(GLbitfield buf);
+
+void glUniform2f(GLint location, GLfloat v0, GLfloat v1);
+```
+
+## 셰이더
+
+OpenGL이 동작하는 순서를 나타내는 공식 파이프라인은 다음과 같다.
+
+| 순서 | 파이프라인      | 설명                                                                        |
+| ---- | --------------- | --------------------------------------------------------------------------- |
+| 1    | Vertex Puller   | 꼭짓점 전달. 선 및 테두리를 정의하는 점들의 리스트를 생성한다.              |
+| 2    | Vertex Shader   | 꼭짓점 셰이더. GLSL로 작성하여 정의한 점 데이터를 조작한다.                 |
+| 3    | Tessellation    | 테셀레이션. 셰이더를 세부적인 메쉬로 나눈다.                                |
+| 4    | Geometry Shader | 기하구조 셰이더. 입력 데이터를 가져와서 0 개 이상의 출력 데이터를 생성한다. |
+| 5    | Resterization   | 래스터화. 화면을 출력하기 위해서 래스터화 한다. (Fragment)                  |
+| 6    | Fragment Shader | 프래그먼트 셰이더. GLSL로 작성된 프로그램이 각 Fragment의 색을 계산한다.    |
+
+## 코드 예제
+
+```cpp
+// 선언부.
+#include <iostream>
+using namespace std;
+
+#define FREEGLUT_STATIC
+#define GLEW_STATIC
+#include <gl/glew.h>
+#include <gl/freeglut.h>
+
+// 3차원 좌표를 표현하기 위한 구조체.
+struct Vec3f {
+    float x, y, z;
+    Vec3f() {}
+    Vec3f(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
+};
+
+enum {TRIANGLE, N_VBOs};
+GLuint VBO[N_VBOs]; // 꼭짓점 버퍼 객체.
+
+
+// 꼭짓점 셰이더 소스.
+static const char* pVS =
+"#version 330                            \n"
+"layout (location = 0) in vec3 Position; \n"
+"                                        \n"
+"void main()                             \n"
+"{                                       \n"
+" gl_Position = vec4(Position*0.1, 1.0); \n"
+"}";
+
+// 프래그먼트 셰이더 소스.
+static const char* pFS =
+"#version 330                           \n"
+"out vec4 FragColor;                    \n"
+"                                       \n"
+"void main()                            \n"
+"{                                      \n"
+" FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"
+"}";
+
+// 개별 셰이더 추가 함수.
+static void AddShader(GLuint shaderProg, const char* pShaderSrc, GLint ShaderType)
+{
+    // 셰이더 생성.
+    GLuint shader = glCreateShader(ShaderType);
+    if(!shader)
+    {
+        cerr << "오류 - Shader 생성(" << ShaderType << ")" << endl;
+    }
+
+    // 셰이더 컴파일.
+    const GLchar* src[1] = { pShaderSrc };
+    const GLint len[1] = { strlen(pShaderSrc) };
+    glShaderSource(shader, 1, src, len);
+    glCompileShader(shader);
+    GLint success;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+    // 컴파일 오류 처리.
+    if(!success) {
+        GLchar infoLog[256];
+        glGetShaderInfoLog(shader, 256, NULL, infoLog);
+        cerr << "오류 - Shader 컴파일(" << ShaderType << "): " << infoLog << endl;
+        exit(1);
+    }
+
+    // 셰이더 프로그램에 컴파일된 셰이더 추가.
+    glAttachShader(shaderProg, shader);
+}
+
+// 전체 셰이더 추가 함수.
+static void SetUpShaders()
+{
+    // 셰이더 프로그램 객체 생성
+    GLuint shaderProg = glCreateProgram();
+    if (!shaderProg) {
+        cerr << "오류 - Shader 프로그램 생성" << endl;
+        exit(1);
+    }
+
+    // 꼭짓점 셰이더 및 프래그먼트 셰이더 적재
+    AddShader(shaderProg, pVS, GL_VERTEX_SHADER);
+    AddShader(shaderProg, pFS, GL_FRAGMENT_SHADER);
+    GLint success = 0;
+    GLchar errLog[256];
+
+    // 셰이더 프로그램 링크 및 오류 처리.
+    glLinkProgram(shaderProg);
+    glGetProgramiv(shaderProg, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProg, sizeof(errLog), NULL, errLog);
+        cerr << "오류 - Shader 프로그램 링크: " << errLog << endl;
+        exit(1);
+    }
+
+    // 프로그램 객체 유효 검사.
+    glValidateProgram(shaderProg); // 프로그램 객체가 유효한지 검사
+    glGetProgramiv(shaderProg, GL_VALIDATE_STATUS, &success);
+    if (!success) {
+        glGetProgramInfoLog(shaderProg, sizeof(errLog), NULL, errLog);
+        cerr << "Invalid shader program: " << errLog << endl;
+        exit(1);
+    }
+
+    // 셰이더 프로그램 객체로 지정.
+    glUseProgram(shaderProg);
+}
+
+// 화면 렌더링 콜백 함수.
+static void RenderCB()
+{
+    // 화면 초기화.
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[TRIANGLE]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDisableVertexAttribArray(0);
+    glFinish();
+}
+
+// 꼭짓점을 저장하는 버퍼 생성.
+static void InitVBOs()
+{
+    // 삼각형 꼭짓점 좌표로 요소 초기화.
+    Vec3f Vertices[3];
+    Vertices[0] = Vec3f(-5.0f, -5.0f, 0.0f);
+    Vertices[1] = Vec3f(5.0f, -5.0f, 0.0f);
+    Vertices[2] = Vec3f(0.0f, 5.0f, 0.0f);
+
+    // 꼭짓점 버퍼를 생성하고 꼭짓점 좌표 전달.
+    glGenBuffers(N_VBOs, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO[TRIANGLE]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+}
+
+// main 함수.
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowPosition(50, 100);
+    glutInitWindowSize(640, 480);
+    glutCreateWindow("OpenGL Sample");
+
+    GLenum s = glewInit();
+    if (s != GLEW_OK) {
+        cerr << "오류 - " << glewGetErrorString(s) << endl;
+        return 1;
+    }
+
+    cout << "GL version: " << glGetString(GL_VERSION) << endl;
+    cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << endl;
+
+    SetUpShaders();
+    InitVBOs();
+    glutDisplayFunc(RenderCB);
+    glutMainLoop();
+    return 0;
+}
+```
