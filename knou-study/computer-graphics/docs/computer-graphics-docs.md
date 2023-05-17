@@ -352,3 +352,101 @@ int main(int argc, char** argv)
     return 0;
 }
 ```
+
+# 3강. 컴퓨터 그래픽스 기본요소(1)
+
+## 좌표의 표현
+
+데카르트 좌표계(Cartesian Coordinate System)는 하나의 점에서 수직으로 교차하는 직선 축으로 표현되는 좌표계.
+
+동차좌표(Homogeneous Coordinates)는 n차원 투영공간을 n + 1개의 좌표로 나타내는 좌표계.
+
+## OpenGL 점 및 선분 그리기
+
+꼭짓점 버퍼 객체를 생성하고, 좌표를 저장한 후에 꼭짓점 셰이더에 전달한다.
+
+```cpp
+enum {TRIANGLE, N_VBOs};
+GLuint VBO[N_VBOs]; // VBO(Vertex Buffer Object)는 꼭짓점 정보를 저장하는 집합 버퍼.
+// (...)
+GLfloat Vertices[3][3] = {
+    {-5.0f, -5.0f, 0.0f}, {5.0f, -5.0f, 0.0f}, {0.0f, 5.0f, 0.0f}
+};
+glGenBuffers(N_VBOs, VBO);                                                  // 새로운 버퍼를 생성.
+glBindBuffer(GL_ARRAY_BUFFER, VBO[TRIANGLE]);                               // 생성한 버퍼에 타겟을 할당.
+glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);  // 실제 버퍼에 데이터를 삽입.
+```
+
+glDrawArrays 함수를 사용하여 점을 그릴 수 있다. Mode를 GL_POINTS로 지정한다.
+
+```cpp
+glEnableVertexAttribArray(0);                           // 꼭짓점 데이터의 시작 인덱스를 렌더링 엔진에 알려줌.
+glBindBuffer(GL_ARRAY_BUFFER, VBO[TRIANGLE]);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);  // 위치 속성을 객체에서 가져오는 속성을 지정.
+glDrawArrays(GL_POINTS, 0, 3);                          // 꼭짓점을 그림.
+glDisableVertexAttribArray(0);                          // 꼭짓점 데이터의 끝 인덱스를 렌더링 엔진에 알려줌.
+```
+
+glDrawArrays 함수를 사용하여 선분을 그릴 수 있다. Mode들은 다음과 같다.
+
+- GL_LINES, 나열된 꼭짓점들을 두 개씩 짝을 지어 선분을 그린다.
+- GL_LINE_STRIP, 나열된 꼭짓점들을 계속 연결하여 다중선분을 그린다.
+- GL_LINE_LOOP, 나열된 꼭짓점들을 계속 연결하여 닫힌 다중선분을 그린다.
+
+## DDA 알고리즘
+
+DDA(Digital Differential Analyzer)는 절대값 |m|에 맞추어 기준축의 좌표가 1씩 증가할 때, 나머지 축 좌표의 변화를 구하여, 좌표를 계산하는 알고리즘이다.
+
+- |m| <= 1, x축 좌표가 1씩 변화할 때, y축 좌표가 m만큼 변화한다.
+- |m| > 1, y축 좌표가 1씩 변화할 때, x축 좌표가 1/m만큼 변화한다.
+
+DDA 알고리즘의 코드 예제는 다음과 같다.
+
+```cpp
+void DDA(int x0, int y0, int xEnd, int yEnd)
+{
+    // x0 != xEnd, y0 != yEnd로 가정.
+    int dx = xEnd - x0, dy = yEnd - y0;
+    int steps, k;
+    float xIncrement, yIncrement, x = x0, y = y0;
+
+    if(abs(dx) > abs(dy))
+        steps = abs(dx);
+    else
+        steps = abs(dy);
+
+    xIncrement = float(dx) / float(steps);
+    yIncrement = float(dy) / float(steps);
+
+    setPixel(round(x), round(y));
+    for(k = 0; k < steps; k++)
+    {
+        x += xIncrement;
+        y += yIncrement;
+        setPixel(round(x), round(y));
+    }
+}
+```
+
+## Bresenham 알고리즘
+
+브레젠험 직선 알고리즘(Bresenham's Line Algorithm)은 컴퓨터 그래픽스에서 복잡한 실수 계산을 대체하여, 정수 계산으로 직선을 그리는 알고리즘이다. 코드 예제는 다음과 같다.
+
+```cpp
+void bresenham_line(int xl, int yl, int xr, int yr)
+{
+    int x, y = yl, W = xr - xl, H = yr - yl;
+    int F = 2 * H - W, dF1 = 2 * H, dF2 = 2 * (H - W);
+
+    for(x = xl; x <= xr; x++)
+    {
+        setPixel(x, y);
+        if(F < 0)
+            F += dF1;
+        else {
+            y++;
+            F += dF2;
+        }
+    }
+}
+```
