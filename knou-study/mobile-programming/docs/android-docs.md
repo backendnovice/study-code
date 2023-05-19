@@ -1,8 +1,6 @@
-# 모바일 프로그래밍 강의 정리
+# 1강. 안드로이드 프로젝트 앱의 동작 원리
 
-## 1장. 안드로이드 프로젝트 앱의 동작 원리
-
-### Android 프로젝트의 구성
+## Android 프로젝트의 구성
 
 | 파일 및 디렉토리명           | 설명                                                                                 |
 | ---------------------------- | ------------------------------------------------------------------------------------ |
@@ -38,7 +36,7 @@ AAPT가 앱에서 사용하는 리소스를 컴파일하여 생성되는 파일�
 - 앱 API 레벨 정의
 - 앱 요구사항 정의
 
-### Android 주요 컴포넌트
+## Android 주요 컴포넌트
 
 **액티비티(Activity)**
 
@@ -56,7 +54,7 @@ AAPT가 앱에서 사용하는 리소스를 컴파일하여 생성되는 파일�
 
 데이터를 체계적으로 관리하고 앱의 인터페이스에 제공하는 컴포넌트. 데이터는 시스템, DB, 웹 상에서 저장할 수 있으며, 다른 앱의 데이터를 변경할 수 있다.
 
-### Android 앱의 작동 원리
+## Android 앱의 작동 원리
 
 일반적인 Java 프로그램과 달리 ART/Dalvik이라 불리는 별도의 가상머신에서 실행한다. 실행 과정은 다음과 같다.
 
@@ -72,9 +70,9 @@ JIT(Just In Time) 방식의 컴파일 환경 기반의 안드로이드 전용 �
 
 앱을 설치하기 전에 컴파일을 마치고 실행하는 안드로이드 가상머신으로 Dex(Dalvik Executable) 형식의 바이트 코드를 실행한다.
 
-## 2장. View
+# 2강. View
 
-### View 소개
+## View 소개
 
 View는 안드로이드 기본 화면을 구성하는 기본 요소이다. View는 위젯과 레이아웃으로 구분할 수 있다.
 
@@ -86,9 +84,9 @@ View에서 텍스트 입력(TextView), 이미지(ImageView), 버튼(Button), 체
 
 View에서 화면의 구조를 나타내는 Container, 위젯과 레이아웃을 포함하여 관리하는 View Group의 역할을 수행하는 클래스.
 
-### id 속성
+## View 속성
 
-id 속성은 View 명칭을 정의할 수 있다.
+id 속성을 사용하여 View의 리소스 명칭을 정의할 수 있다.
 
 | 속성명 | 설명                                                       |
 | ------ | ---------------------------------------------------------- |
@@ -115,7 +113,7 @@ id 속성은 View 명칭을 정의할 수 있다.
 />
 ```
 
-### background 속성
+## background 속성
 
 background 속성은 View 배경의 색상과 이미지를 설정할 수 있다.
 
@@ -137,7 +135,7 @@ background 속성은 View 배경의 색상과 이미지를 설정할 수 있다.
 />
 ```
 
-### Rotation 속성
+## Rotation 속성
 
 rotation 속성은 View의 각도를 설정한다. rotationX는 수평, rotationY는 수직 각도를 결정한다.
 
@@ -149,7 +147,7 @@ rotation 속성은 View의 각도를 설정한다. rotationX는 수평, rotation
 />
 ```
 
-### Padding 속성
+## Padding 속성
 
 padding 속성은 View의 안쪽 여백을 설정한다. left, right, top, bottom 속성을 사용할 수 있다.
 
@@ -161,7 +159,7 @@ padding 속성은 View의 안쪽 여백을 설정한다. left, right, top, botto
 />
 ```
 
-### Visibility 속성
+## Visibility 속성
 
 visibility 속성은 View의 표시 여부를 설정한다.
 
@@ -179,7 +177,7 @@ visibility 속성은 View의 표시 여부를 설정한다.
 />
 ```
 
-### Focusable 속성
+## Focusable 속성
 
 focusable 속성은 View의 상세 기능 활성화 여부를 설정한다. EditText나 Button과 같이 사용자와 상호작용하는 위젯들은 true로 설정해야 한다.
 
@@ -191,7 +189,7 @@ focusable 속성은 View의 상세 기능 활성화 여부를 설정한다. Edit
 />
 ```
 
-### Alpha 속성
+## Alpha 속성
 
 alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값을 가지며, 낮을 수록 투명하다.
 
@@ -203,21 +201,22 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-## 3장. 문자 및 이미지 출력을 위한 위젯
+# 3강. 문자 및 이미지 출력을 위한 위젯
 
-### TextView
+## TextView
 
 문자열을 화면에 출력하기 위해서 사용하는 위젯.
 
-- 텍스트 내용 설정.
+| 속성명     | 설명                       |
+| ---------- | -------------------------- |
+| text       | 텍스트 문자열을 변경한다.  |
+| textColor  | 텍스트 색상을 변경한다.    |
+| textSize   | 텍스트 크기를 변경한다.    |
+| textStyle  | 텍스트 스타일을 변경한다.  |
+| typeface   | 텍스트 글꼴을 설정한다.    |
+| singleline | 텍스트를 한 줄로 설정한다. |
 
-```xml
-<TextView
-    android:text="New Text"
-/>
-```
-
-- strings.xml의 id를 사용.
+- text 속성 설정 예제.
 
 ```xml
 <!-- strings.xml -->
@@ -231,7 +230,7 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-- textColor 색상 설정.
+- textColor 속성 설정 예제.
 
 ```xml
 <TextView
@@ -239,7 +238,7 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-- textSize 크기 설정.
+- textSize 속성 설정 예제.
 
 ```xml
 <TextView
@@ -247,7 +246,7 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-- textStyle 스타일 설정.
+- textStyle 속성 설정 예제.
 
 ```xml
 <TextView
@@ -255,7 +254,7 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-- typeface 글꼴 설정.
+- typeface 속성 설정 예제.
 
 ```xml
 <TextView
@@ -263,7 +262,7 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-- singleLine 한 줄 출력 설정.
+- singleLine 속성 설정 예제.
 
 ```xml
 <TextView
@@ -271,9 +270,30 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 />
 ```
 
-### ImageView
+## ImageView
 
 이미지를 화면에 출력하기 위해서 사용하는 위젯.
+
+| 속성명           | 설명                                                   | 비고                |
+| ---------------- | ------------------------------------------------------ | ------------------- |
+| src              | 이미지의 소스 경로를 결정한다.                         |                     |
+| maxWidth         | 이미지의 최대 가로 길이를 결정한다.                    | Height == 세로 길이 |
+| minWidth         | 이미지의 최소 가로 길이를 결정한다.                    | Height == 세로 길이 |
+| adjustViewBounds | 이미지의 비율을 유지하며 크기를 조정한다.              |                     |
+| cropToPadding    | 이미지가 레이아웃을 초과하면 잘라낼지 여부를 결정한다. |                     |
+| scaleType        | 이미지의 크기변환 및 채워넣기 옵션을 설정한다.         | 아래 표 참고        |
+
+아래 표는 scaleType의 옵션을 설명한다.
+
+| 옵션명     | 설명                                                                               |
+| ---------- | ---------------------------------------------------------------------------------- |
+| fitCenter  | 원래 비율을 유지하며 View의 중앙에 표시한다.                                       |
+| fitStart   | 이미지 시작 위치를 좌측 상단을 기준으로 한다.                                      |
+| fitEnd     | 이미지 시작 위치를 우측 하단을 기준으로 한다.                                      |
+| fitXY      | 이미지의 비율을 무시하고 틀에 맞춘다.                                              |
+| center     | 이미지의 크기를 변경하지 않고 중앙에 위치한다.                                     |
+| centerCrop | 이미지를 틀에 맞추어 동일 비율로 크기를 변경한다.                                  |
+| matrix     | 크기와 비율을 유지하여 좌측 상단을 기준으로 출력한다. 이미지가 초과할 경우 잘린다. |
 
 - 이미지 경로 설정.
 
@@ -314,4 +334,350 @@ alpha 속성은 View의 투명도를 설정한다. 0.0 ~ 1.0 사이의 float 값
 <ImageView
     android:scaleType="fitXY"
 />
+```
+
+# 4강. 사용자 인터페이스를 위한 위젯
+
+## Button
+
+Button은 사용자로부터 이벤트를 수집할 수 있는 인터페이스를 제공하는 위젯이다. 디폴트는 직사각형 모양이며 사각형 영역을 터치하여 선택적인 명령을 전달할 수 있다.
+
+| 속성명      | 설명                                               |
+| ----------- | -------------------------------------------------- |
+| text        | Button에 표기되는 문자열을 결정한다.               |
+| textAllCaps | Button에 표기되는 문자열을 대문자로 변환한다.      |
+| onClick     | Button을 클릭하면 발생하는 이벤트 동작을 연결한다. |
+
+- text 속성 설정 예제.
+
+```xml
+<Button
+    android:text="Button"
+/>
+```
+
+- textAllCaps 속성 설정 예제.
+
+```xml
+<Button
+    android:textAllCaps="true"
+/>
+```
+
+- onButtonClick 속성 설정 예제.
+
+```xml
+<!-- MainActivity의 onButtonClick 함수를 호출. -->
+<Button
+    android:onClick="onButtonClick"
+/>
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+    // (...)
+
+    // 버튼 ID에 따라서 text를 설정하는 메소드.
+    public void onButtonClick(View view) {
+        TextView text1 = (TextView) findViewById(R.id.text1);
+        switch(view.getId()) {
+            case R.id.button1:
+                text1.setText("hello");
+                break;
+            case R.id.button2:
+                text2.setText("world");
+                break;
+        }
+    }
+}
+```
+
+## EditText
+
+EditText는 사용자로부터 문자열을 입력받을 수 있는 인터페이스를 제공하는 위젯이다. TextView의 서브 클래스로 TextView의 모든 속성을 사용할 수 있다.
+
+| 속성명  | 설명                                                               |
+| ------- | ------------------------------------------------------------------ |
+| text    | EditText의 기본 문자열을 결정한다.                                 |
+| getText | EditText의 문자열을 MainActivity에서 활용할 때 참조할 때 사용한다. |
+
+- text 속성 설정 예제.
+
+```xml
+<EditText
+    android:text="Input Please"
+/>
+```
+
+- getText 활용 예제.
+
+```xml
+<EditText
+    android:id="@+id/edit"
+    android:text="Input Please"
+/>
+<Button
+    android:id="@+id/button"
+    android:onClick="onButtonClick"
+/>
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+    // (...)
+    // 버튼을 클릭하면 edit의 문자열을 토스트로 출력하는 메소드.
+    public void onButtonClick(View view) {
+        EditText edit = (EditText) findViewById(R.id.edit);
+        String string = edit.getText().toString();
+        Toast.makeText(MainActivity.this, string, Toast.LENGHT_SHORT).show();
+    }
+}
+```
+
+## CheckBox
+
+CheckBox는 사용자가 문자열 리스트에 다수의 구성요소를 동시에 선택하기 위한 인터페이스를 제공하는 위젯이다.
+
+| 속성명    | 설명                                                        |
+| --------- | ----------------------------------------------------------- |
+| isChecked | CheckBox의 체크 여부를 MainActivity에서 참조할 때 사용한다. |
+
+- CheckBox 위젯 예제.
+
+```xml
+<CheckBox
+    android:id="@+id/checkbox1"
+    android:text="apple"
+/>
+<CheckBox
+    android:id="@+id/checkbox2"
+    android:text="banana"
+/>
+<CheckBox
+    android:id="@+id/checkbox3"
+    android:text="orange"
+/>
+```
+
+## RadioButton
+
+RadioButton은 사용자가 문자열 리스트에서 하나의 구성요소를 선택하기 위한 인터페이스를 제공하는 위젯이다. 여러 RadioButton들을 연동하기 위해서 RadioGroup를 사용한다.
+
+| 속성명    | 설명                                                           |
+| --------- | -------------------------------------------------------------- |
+| isChecked | RadioButton의 체크 여부를 MainActivity에서 참조할 때 사용한다. |
+
+- RadioButton 위젯 예제.
+
+```xml
+<RadioGroup>
+    <RadioButton
+        android:id="@+id/radiobutton1"
+        android:text="Apple"
+    />
+    <RadioButton
+        android:id="@+id/radiobutton2"
+        android:text="Banana"
+    />
+    <RadioButton
+        android:id="@+id/radiobutton3"
+        android:text="Orange"
+    />
+</RadioGroup>
+```
+
+## Switch
+
+Switch는 사용자의 선택에 따라서 On / Off를 전환하는 토글 형태의 인터페이스를 제공하는 위젯이다. MainActivity에서 isChecked 메소드를 통해 선택 여부를 판별할 수 있다.
+
+| 속성명    | 설명                                                      |
+| --------- | --------------------------------------------------------- |
+| isChecked | Switch의 체크 여부를 MainActivity에서 참조할 때 사용한다. |
+
+- Switch 위젯 예제.
+
+```xml
+<Switch
+    android:id="@+id/switch1"
+    android:text="approval"
+/>
+<Button
+    android:id="@+id/button1"
+    android:text="button"
+    android:onClick="onButtonClick"
+/>
+<TextView
+    android:id="@+id/result"
+    android:text=""
+    android:textSize="35dp"
+/>
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+    // (...)
+    // 버튼을 클릭하면 스위치의 체크 여부에 따라서 result의 내용을 변경하는 메소드.
+    public void onButtonClick(View view) {
+        Switch switch1 = (Switch) findViewById(R.id.switch1);
+        TextView result = (TextView) findViewById(R.id.result);
+
+        switch(view.getId()) {
+            case R.id.button1:
+                if(switch1.isChecked()) {
+                    result.setText("Switch On");
+                }else {
+                    result.setText("Switch Off");
+                }
+                break;
+        }
+    }
+}
+```
+
+# 5강. 레이아웃 1
+
+## ViewGroup
+
+ViewGroup은 다양한 View를 그룹화하여 계층적인 관리 구조를 제공함으로써 효율성을 높여준다.
+
+| 속성명        | 설명                                  | 비고         |
+| ------------- | ------------------------------------- | ------------ |
+| layout_width  | 레이아웃의 가로 크기를 결정한다.      | 아래 표 참고 |
+| layout_height | 레이아웃의 세로 크기를 결정한다.      | 아래 표 참고 |
+| layout_margin | View와 View 사이의 간격을 지정한다.   | 바깥쪽 여백  |
+| padding       | View의 내용물 사이의 간격을 지정한다. | 안쪽 여백    |
+
+↓ layout_width와 layout_height 속성표
+
+| 속성명       | 설명                                     |
+| ------------ | ---------------------------------------- |
+| match_parent | 레이아웃의 크기에 맞춰 최대 크기로 출력. |
+| wrap_content | 레이아웃의 크기에 맞춰 최소 크기로 출력. |
+| literal      | 입력한 값에 따라서 크기가 결정.          |
+
+- layout_width와 layout_height 속성 예제.
+
+```xml
+<LinearLayout>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+    />
+</LinearLayout>
+```
+
+- padding과 layout_margin 속성 예제.
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20px"
+    android:padding="15dp">
+    <TextView
+        android:text="Button"
+        android:typeface="serif"
+    />
+</LinearLayout>
+```
+
+## LinearLayout
+
+LinearLayout(선형 레이아웃)은 내부 구성요소를 선형적으로 배치하는 ViewGroup이다.
+
+| 속성명          | 설명                                             | 비고                     |
+| --------------- | ------------------------------------------------ | ------------------------ |
+| orientation     | View들을 배치하는 방향을 지정한다.               | vertical / horizontal    |
+| baselineAligned | 높이가 다른 TextView를 아래를 기준으로 정렬한다. | vertical 의미 없음       |
+| gravity         | View 내용물의 정렬 방식을 결정한다.              | center / center_vertical |
+| layout_weight   | 상위 레이아웃 영역 할당 비율을 지정한다.         | 0(기본값)                |
+
+- orientation 속성 예제.
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/edit"
+        android:text="Input Please"
+    />
+    <Button
+        android:id="@+id/button"
+        android:text="SUBMIT"
+    />
+</LinearLayout>
+```
+
+- baselineAligned 속성 예제.
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="true">
+    <EditText
+        android:id="@+id/edit"
+        android:text="Input Please"
+    />
+    <Button
+        android:id="@+id/button"
+        android:text="SUBMIT"
+    />
+</LinearLayout>
+```
+
+- gravity 속성 예제.
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="true">
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical | right"
+        android:text="Gravity Test"
+    />
+</LinearLayout>
+```
+
+- layout_weight 속성 예제.
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="top text(1)"
+    />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="top text(2)"
+    />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:text="top text(3)"
+    />
+</LinearLayout>
 ```
