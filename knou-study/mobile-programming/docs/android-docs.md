@@ -681,3 +681,171 @@ LinearLayout(선형 레이아웃)은 내부 구성요소를 선형적으로 배�
     />
 </LinearLayout>
 ```
+
+# 6강. 레이아웃 2
+
+## RelativeLayout
+
+RelativeLayout은 ViewGroup에서 View 사이의 상대적인 관계를 사용하여 위치를 지정하고 배치하는 레이아웃이다.
+
+| 속성값                          | 설명                                                             |
+| ------------------------------- | ---------------------------------------------------------------- |
+| layout_above                    | 지정된 View 위에 배치한다.                                       |
+| layout_below                    | 지정된 View 아래에 배치한다.                                     |
+| layout_toLeftOf                 | 지정된 View 왼쪽에 배치한다.                                     |
+| layout_toRightOf                | 지정된 View 오른쪽에 배치한다.                                   |
+| layout_alignTop                 | 지정된 View와 위쪽 변을 맞춘다.                                  |
+| layout_alignBottom              | 지정된 View와 아래쪽 변을 맞춘다.                                |
+| layout_alignLeft                | 지정된 View와 왼쪽 변을 맞춘다.                                  |
+| layout_alignRight               | 지정된 View와 오른쪽 변을 맞춘다.                                |
+| layout_alignParentTop           | true면 부모와 위쪽 변을 맞춘다.                                  |
+| layout_alignParentBottom        | true면 부모와 아래쪽 변을 맞춘다.                                |
+| layout_alignParentLeft          | true면 부모와 왼쪽 변을 맞춘다.                                  |
+| layout_alignParentRight         | true면 부모와 오른쪽 변을 맞춘다.                                |
+| layout_alignBaseline            | 지정한 View와 베이스라인을 맞춘다.                               |
+| layout_alignWithParentIfMIssing | 대상으로 지정한 View가 존재하지 않을 경우, 부모를 기준으로 한다. |
+| layout_centerHorizontal         | true면 부모의 수평 중앙에 배치한다.                              |
+| layout_centerVertical           | true면 부모의 수직 중앙에 배치한다.                              |
+| layout_centerInParent           | true면 부모의 수평 및 수직 중앙에 배치한다.                      |
+
+- RelativeLayout 예제.
+
+```xml
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/target"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInparent="true"
+        android:text="TARGET"/>
+    <TextView
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/target"
+        android:text="LEFT"/>
+    <TextView
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/target"
+        android:text="RIGHT"/>
+    <TextView
+        android:id="@+id/top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/target"
+        android:text="TOP"/>
+    <TextView
+        android:id="@+id/bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/target"
+        android:text="BOTTOM"/>
+</RelativeLayout>
+```
+
+RelativeLayout에서 View는 상대적인 위치를 결정하기 위해서 다른 View에 종속될 수 있다. 때문에 배치를 찾고 유지보수를 할 때 어려움이 발생할 수 있다.
+
+## AbsoluteLayout
+
+AbsoluteLayout은 View 사이의 관계와 상관없이 절대적인 위치에 View를 배치하는 레이아웃이다.
+
+| 속성명   | 설명                              |
+| -------- | --------------------------------- |
+| layout_x | 해당 가로 좌표에 View를 배치한다. |
+| layout_y | 해당 세로 좌표에 View를 배치한다. |
+
+- AbsoluteLayout 예제.
+
+```xml
+<AbsoluteLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="50dip"
+        android:layout_y="350dip"
+        android:text="Absolute(50, 350)"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="130dip"
+        android:layout_y="90dip"
+        android:text="Absolute(130, 90)"/>
+</AbsoluteLayout>
+```
+
+## FrameLayout
+
+FrameLayout은 위치를 지정하는 규칙이 없고, 모든 View가 좌측 상단에 나타나는 레이아웃이다.
+
+| 속성명             | 설명                                                                              |
+| ------------------ | --------------------------------------------------------------------------------- |
+| foreground         | 자식 위에 얹는 이미지를 설정한다.                                                 |
+| foregroundGravity  | foreground 이미지의 위치를 결정한다.                                              |
+| measureAllChildren | 레이아웃 크기를 자식 View에 맞추거나, Visiblity가 visible로 설정된 View에 맞춘다. |
+
+- FrameLayout 예제. (겹쳐서 표시)
+
+```xml
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/image1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/banana"/>
+    <ImageView
+        android:id="@+id/image2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/earth"/>
+</FrameLayout>
+```
+
+- FrameLayout 예제. (버튼으로 숨기기/보이기)
+
+```xml
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:adjustViewBounds="true"/>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show/Hide"/>
+</FrameLayout>
+```
+
+```java
+public class MainActivity extends Activity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        findViewById(R.id.button).setOnClickListener(
+            new View.onClickListener() {
+                public void onClick(View view) {
+                    ImageView image = (ImageView) findViewById(R.id.image);
+                    if(image.getVisibility() == View.VISIBLE)
+                        image.setVisibility(View.GONE);
+                    else
+                        image.setVisibility(View.VISIBLE);
+                }
+            }
+        );
+    }
+}
+```
