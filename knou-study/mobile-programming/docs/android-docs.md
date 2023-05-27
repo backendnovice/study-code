@@ -849,3 +849,369 @@ public class MainActivity extends Activity {
     }
 }
 ```
+
+# 7강. 레이아웃 3
+
+## TableLayout
+
+TableLayout은 행과 열을 구분하는 표 형태로 자식 View를 배치하는 레이아웃이다.
+
+| 속성명         | 설명                                                 | 비고    |
+| -------------- | ---------------------------------------------------- | ------- |
+| shrinkColumns  | 부모 폭에 맞추기 위해서 열의 폭을 강제로 축소한다.   | 열 번호 |
+| stretchColumns | 부모 여백을 채우기 위해서 열의 폭을 임의로 확장한다. | 열 번호 |
+
+- TableLayout 예제.
+
+```xml
+<TableLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TableRow>
+        <TextView
+            android:text="SUN"
+            android:textSize="50px"
+            android:padding="5dip"/>
+        <TextView
+            android:text="MON"
+            android:textSize="50px"
+            android:padding="5dip"/>
+        <TextView
+            android:text="TUE"
+            android:textSize="50px"
+            android:padding="5dip"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:text="5"
+            android:textSize="50px"
+            android:padding="5dip"/>
+        <TextView
+            android:text="6"
+            android:textSize="50px"
+            android:padding="5dip"/>
+        <TextView
+            android:text="7"
+            android:textSize="50px"
+            android:padding="5dip"/>
+    </TableRow>
+</TableLayout>
+```
+
+## 레이아웃 중첩
+
+레이아웃은 View들을 담는 컨테이너로 ViewGroup과 View를 포함할 수 있다. 레이아웃을 중첩하여 배치하는 것도 가능하다.
+
+- 레이아웃 중첩 예제.
+
+```xml
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="First Layout Start"/>
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <TextView
+                android:text="SUN"
+                android:textSize="50px"
+                android:padding="5dip"/>
+            <TextView
+                android:text="MON"
+                android:textSize="50px"
+                android:padding="5dip"/>
+            <TextView
+                android:text="TUE"
+                android:textSize="50px"
+                android:padding="5dip"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:text="5"
+                android:textSize="50px"
+                android:padding="5dip"/>
+            <TextView
+                android:text="6"
+                android:textSize="50px"
+                android:padding="5dip"/>
+            <TextView
+                android:text="7"
+                android:textSize="50px"
+                android:padding="5dip"/>
+        </TableRow>
+    </TableLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Second"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Layout"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="TextView"/>
+    </LinearLayout>
+</LinearLayout>
+```
+
+## 실행 중 속성 바꾸기
+
+안드로이드 앱을 실행 중에 특정 View의 속성값을 변경함으로써 동적인 화면을 구성할 수 있다. 기본적으로 set 계열의 메소드가 사용된다.
+
+- TextView 속성 변경 예제.
+
+```java
+public class MainActivity extends Activity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout_activity_main);
+        findViewById(R.id.buttonid).setOnClickListener(new View.OnClickListener() {
+            // 버튼을 클릭하면 Text 크키를 40으로 변경.
+            public void onClick(View v) {
+                TextView text = (TextView) findViewById(R.id.textid);
+                text.setTextSize(40);
+            }
+        })
+    }
+}
+```
+
+- ImageView 속성 변경 예제.
+
+```java
+public class MainActivity extends Activity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        findViewById(R.id.buttonid).setOnClickListener(new View.OnClickListener() {
+            // 버튼을 클릭하면 이미지를 파란색으로 변경.
+            public void onClick(View v) {
+                ImageView image = (ImageView) findViewById(R.id.imageid);
+                image.setColorFilter(Color.BLUE);
+            }
+        })
+    }
+}
+```
+
+# 8강. 도형 및 소리 출력
+
+## 도형 출력 1
+
+Canvas는 액티비티가 실행되는 화면을 도형을 그리기 위한 도화지 역할을 맡는다. View 또는 View 파생 클래스를 상속받고 onMeasure, onDraw 메소드를 재정의하여 사용한다.
+
+- CustomView를 구현한 예제.
+
+```java
+public class MainActivity extends Activity {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        TextView text = new TextView(this);
+        setContentView(text);
+    }
+}
+
+class TextView extends View {
+    public TextView(Context context) {
+        super(context);
+    }
+
+    public void onDraw(Canvas canvas) {
+        canvas.drawColor(Color.CYAN);
+        Paint paint = new Paint();
+        paint.setColor(Color.RED);
+        canvas.drawRect(120, 100, 320, 500, paint);
+    }
+}
+```
+
+Canvas 객체는 화면 위의 다양한 그림을 그리는 메소드를 지원한다. 시스템이 초기화하고 View의 onDraw 함수로 인수를 전달한다.
+
+다음은 Canvas 내의 다양한 도형을 그리는 메소드들을 다음과 같다.
+
+```java
+void drawPoint(float x, float y, Paint paint);
+void drawLine(float startX, float startY, float stopX, float stopY, Paint paint);
+void drawCircle(float cx, float cy, float radius, Paint paint);
+void drawRect(float left, float top, float right, float bottom, Paint paint);
+void drawText(String text, float x, float y, Paint paint);
+```
+
+- Canvas 객체를 활용하는 예제.
+
+```java
+public void onDraw(Canvas canvas) {
+    canvas.drawColor(Color.LTGRAY);
+    Paint paint = new Paint();
+    paint.setStrokeWidth(30f);
+
+    // 빨간색 사각형.
+    paint.setColor(Color.RED);
+    canvas.drawRect(10, 10, 200, 400, paint);
+
+    // 파란색 투명원.
+    paint.setColor(0x800000ff);
+    canvas.drawCircle(350, 550, 250, paint);
+
+    // 검정색 점.
+    paint.setColor(Color.BLACK);
+    canvas.drawPoint(30, 30, paint);
+
+    // 검정색 선.
+    canvas.drawLine(700, 700, 900, 900, paint);
+
+    // 초록색 문자열.
+    paint.setTextSize(100);
+    paint.setColor(Color.GREEN);
+    canvas.drawText("Canvas Text", 100, 1000, paint);
+}
+```
+
+## 도형 출력 2
+
+Paint 객체는 그리기 속성 정보를 갖는 객체이며, 화면에 그려지는 도형의 색상, 선의 굵기 등의 속성값을 Paint 객체를 이용하여 지정한다.
+
+| 속성명         | 설명                                                                | 비고                 |
+| -------------- | ------------------------------------------------------------------- | -------------------- |
+| setAntiAlias   | 색상의 차이가 뚜렷한 경계 부근의 중간색을 삽입하여 부드럽게 만든다. |                      |
+| setColor       | 도형의 색을 16진수, 색상 코드, 색상명으로 지정한다.                 | Color.RED, 0x0000ff  |
+| getColor       | 도형의 현재 설정 색상값을 반환한다.                                 |                      |
+| setStrokeCap   | 선 끝 모양을 지정한다.                                              | BUTT, ROUND, SQUARE  |
+| setStrokeWidth | 선 이나 직선의 굵기를 float값으로 지정한다.                         |                      |
+| setStyle       | 도형을 그릴 때 외곽선 모양을 결정한다.                              | FILL, STROKE         |
+| setStrokeJoin  | 도형의 모서리를 표현하는 방식을 결정한다.                           | MITTER, BEVEL, ROUND |
+
+- Paint 객체를 활용하는 예제.
+
+```java
+public void onDraw(Canvas canvas) {
+    canvas.drawRGB(212, 244, 250);
+    Paint paint = new Paint();
+
+    // 선 끝 테스트.
+    paint.setColor(Color.RED);
+    paint.setStrokeWidth(30);
+    paint.setStrokeCap(Paint.Cap.ROUND);
+    canvas.drawLine(50, 100, 700, 100, paint);
+    paint.setStrokeCap(Paint.Cap.SQUARE);
+    canvas.drawLine(50, 200, 700, 200, paint);
+
+    // 모서리 테스트.
+    paint.setStyle(Paint.Style.STROKE);
+    paint.setStrokeJoin(Paint.Join.MITTER);
+    canvas.drawRect(50, 300, 150, 400, paint);
+    paint.setStrokeJoin(Paint.Join.BEVEL);
+    canvas.drawRect(100, 300, 200, 400, paint);
+    paint.setStrokeJoin(Paint.Join.ROUND);
+    canvas.drawRect(310, 300, 410, 400, paint);
+
+    // 채우기 테스트. (채우기)
+    paint.setColor(Color.GREEN);
+    paint.setStrokeWidth(10);
+    paint.setAntiAlias(true);
+    paint.setStyle(Paint.Style.FILL);
+    canvas.drawCircle(100, 550, 50, paint);
+
+    // 채우기 테스트. (외곽선)
+    paint.setStyle(Paint.Style.STROKE);
+    canvas.drawCircle(230, 550, 50, paint);
+
+    // 채우기 테스트. (채우기 & 외곽선)
+    paint.setStyle(Paint.Style.FILL_AND_STROKE);
+    canvas.drawCircle(360, 550, 50, paint);
+    paint.setColor(Color.YELLOW);
+}
+```
+
+## 메시지 알림
+
+Toast 객체는 화면에 일시적으로 나타나는 작은 팝업으로 사용자에게 간단한 피드백 메시지를 제공한다. 일방적으로 정보를 알려주기 때문에 상호작용과 포커스를 갖지 않는다.
+
+- Toast 프로젝트 예제.
+
+```java
+public class MainActivity extends Activity {
+    Toast mToast = null;
+    int count;
+    String string;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        findViewById(R.id.shortmsg).setOnClickListener(mClickListener);
+        findViewById(R.id.longmsg).setOnClickListener(mClickListener);
+    }
+
+    Button.OnClickListener mClickListener = new Button.OnClickListener() {
+        public void onClick(View v) {
+            switch(v.getId()) {
+                case R.id.shortmsg:
+                    Toast.makeText(MainActivity.this, "Short Time Message", Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.longmsg:
+                    Toast.makeText(MainActivity.this, "Long Time Message", Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
+    }
+}
+```
+
+## 소리 알림
+
+안드로이드에서 지원하는 확장자(.wav, .mp3, .ogg)를 갖는 소리 파일들을 재생할 수 있다. 파일들은 res/raw 폴더에 저장한다.
+
+| 객체명       | 설명                                                                  |
+| ------------ | --------------------------------------------------------------------- |
+| SoundPool    | raw 폴더에 저장된 소리 파일을 재생한다.                               |
+| AudioManager | 출력 장비와 오디오를 관리한다. 안드로이드 기본 파일을 사용할 수 있다. |
+
+- 소리 알림 예제.
+
+```java
+public class MainActivity extends Activity {
+    SoundPool mPool;
+    int mDing;
+    AudioManager mAm;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        mDing = new mPool.load(this, R.raw.bgm, 1);
+        mAm = (AudioManager)getSystemService(AUDIO_SERVICE);
+        findViewById(R.id.beep1).setOnClickListener(mClickListener);
+        findViewById(R.id.beep2).setOnClickListener(mClickListener);
+    }
+
+    Button.OnClickListener mClickListener = new Button.OnClickListener() {
+        public void onClick(View v) {
+            MediaPlayer player;
+            switch(v.getId()) {
+                case R.id.beep1:
+                    mPool.play(mDing, 1, 1, 0, 0, 1);
+                    break;
+                case R.id.beep2:
+                    mAm.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD);
+                    break;
+            }
+        }
+    }
+}
+```
