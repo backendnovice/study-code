@@ -1679,3 +1679,420 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+
+# 11강. 액티비티와 인텐트
+
+## 액티비티 1
+
+앱은 Activity, ContentProvider, BroadcastReceiver, Service의 네 개의 컴포넌트로 구성된다.
+
+- Activity는 사용자가 앱과의 상호작용을 수행하는 기본적인 컴포넌트.
+- ContentProvider는 앱과 데이터 계층 간의 매개체 역할을 수행하여 데이터를 가져오는 컴포넌트.
+- BroadcastReceiver는 특정 이벤트에서 수신 및 처리를 수행하는 컴포넌트.
+- Service는 백그라운드에서 작업을 수행하는 컴포넌트.
+
+앱은 데스크톱 환경과는 달리 자원이 넉넉하지 않으므로 여러가지 제약이 발생한다.
+
+- 메모리의 제한으로 동시에 많은 앱을 실행할 수 없다.
+- 화면 크기의 제한으로 여러 앱을 동시에 보여줄 수 없다.
+
+액티비티 자체는 안드로이드 앱을 관리하기 위한 단위로서 View, ViewGroup를 가지고, setContentView()로 View를 화면에 출력한다.
+
+## 생명주기
+
+앱은 여러 개를 동시에 실행할 수 있지만, 하나의 화면만을 출력한다. 따라서 생명주기(Life Cycle)에 맞추어 '**시작->실행->활성화->비활성화->중지->종료**'의 형태로 활성화, 비활성화되며 실행된다.
+
+안드로이드 플랫폼은 작업들을 스택(Stack)의 형태로 관리하는데, 액티비티가 새로 생성되면 위로 쌓으며 활성화하는 구조이다.
+
+| 상태    | 설명                                                         |
+| ------- | ------------------------------------------------------------ |
+| Active  | 사용자에게 보여지며 직접 사용하는 상태이다.                  |
+| Pause   | 다른 액티비티로 포커스가 전환되어 일시중지된 상태이다.       |
+| Stopped | 사용자에게 보여지지 않으며 언제든지 종료될 수 있는 상태이다. |
+
+액티비티는 생성되어 종료될 때까지 onPause(), onResume()이 여러 차례 호출될 수 있다.
+
+액티비티 상태와 관련된 메소드는 다음과 같다.
+
+| 메소드명    | 설명                                                                             |
+| ----------- | -------------------------------------------------------------------------------- |
+| onCreate()  | 액티비티가 생성될 때 호출되며 필요한 초기화 작업들을 수행한다.                   |
+| onRestart() | 액티비티가 중지된 후 다시 활성화되기 전에 호출된다.                              |
+| onStart()   | 액티비티가 사용자에게 보이기 직전에 호출된다.                                    |
+| onResume()  | 액티비티가 사용자와 상호작용 하기 직전에 호출된다.                               |
+| onPause()   | 애니메이션을 중지하고, 데이터를 저장하며, 다른 액티비티가 실행될 때 호출된다.    |
+| onStop()    | 액티비티가 사용자에게 보이지 않을 때 호출된다. 액티비티가 소멸된 상태가 아니다.  |
+| onDestroy() | 액티비티가 완전히 소멸될 때 호출된다. finish(), isFinishing()으로 주체가 갈린다. |
+
+## 인텐트 1
+
+인텐트(Intent)는 여러 개의 액티비티로 구성된 앱에서 통신 장치, 메시지 전달 방식을 의미한다. 또한, 주요 컴포넌트들이 수행해야 할 작업의 정보를 가진다. 일반적인 함수에서 인수, 반환값의 역할과 유사하다.
+
+인텐트 호출 메소드는 **startActivity(Intent intent)**로 인텐트 안에 호출 액티비티, 필요한 정보를 가지고 있다.
+
+인텐트 생성자는 다른 액티비티를 호출할 때 주로 사용하며, 액티비티의 Class, Context 등을 사용한다.
+
+- 인텐트 기본 예시.
+
+```java
+Intent intent = new Intent(MainActivity.this, SubActivity.class);
+startActivity(intent);
+```
+
+명시적 인텐트(Explicit Intent)는 인텐트의 호출 컴포넌트를 분명하게 명시하는 것이다. 같은 앱의 SubActivity를 호출할 때 사용한다.
+
+- 명시적 인텐트 예시.
+
+```java
+Intent searchIntent = new Intent(MainActivity.this, SearchService.class);
+searchIntent.setData(Uri.parse(mapUrl));
+startService(searchIntent);
+```
+
+암시적 인텐트(Implicit Intent)는 호출 대상이 분명히 정해지지 않은 인텐트를 말한다. 다른 앱의 내부 코드를 보지 않는 이상 분명한 이름을 알 수 없기 때문이다.
+
+- 암시적 인텐트 예시.
+
+```java
+Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com/"));
+startActivity(intent);
+```
+
+## 액티비티 2
+
+startActivity()를 사용하여 다른 액티비티를 호출하더라도 정상적으로 실행되지 않는다. 보안상의 이유 때문인데, AndroidManifest.xml에 수동으로 등록해야 한다.
+
+- AndroidManifest 등록 예제.
+
+```xml
+<manifest>
+    <application>
+        <activity>
+            (...)
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SubActivity"
+            android:label="SubActivity">
+        </activity>
+    </application>
+</manifest>
+```
+
+액티비티명은 패키지명을 포함한 전체 경로로 지정하며, 같은 패키지는 앞에 '.'을 찍는다.
+
+인텐트 필터(Intent-filter)는 액티비티가 어떤 종류의 인텐트를 받을 것인지 명시하는 필터 역할을 수행한다.
+
+## 인텐트 2
+
+사용할 인텐트를 명확히 하기 위해서는 Action, Data, Type, Category, Component 등의 정보들이 포함되어야 한다. 생성자를 전달하여 초기화할 수 있고, 메소드로 변경하거나 내용을 확인할 수도 있다.
+
+Action은 개발자가 실행하고자 하는 동작을 의미하며 수행 작업을 지정한다. Action을 조사하거나 변경할 때는 getAction(), setAction()을 사용한다.
+
+| 액션                    | 대상                | 설명                            |
+| ----------------------- | ------------------- | ------------------------------- |
+| ACTION_CALL             | 액티비티            | 통화를 시작한다.                |
+| ACTION_EDIT             | 액티비티            | 데이터를 표시하고 편집한다.     |
+| ACTION_MAIN             | 액티비티            | 메인 액티비티를 실행한다.       |
+| ACTION_VIEW             | 액티비티            | 무언가를 보여준다.              |
+| ACTION_DIAL             | 액티비티            | 전화를 건다.                    |
+| ACTION_BATTER_LOW       | 브로드캐스트 리시버 | 배터리가 부족하다.              |
+| ACTION_HEADSET_PLUG     | 브로드캐스트 리시버 | 헤드셋이 접속되거나 분리되었다. |
+| ACTION_SCREEN_ON        | 브로드캐스트 리시버 | 화면이 켜졌다.                  |
+| ACTION_TIMEZONE_CHANGED | 브로드캐스트 리시버 | 타임존이 변경되었다.            |
+
+Data는 Action에 필요한 상세 데이터를 제공하는 역할을 수행한다. Action과 마찬가지로 접근하기 위해서는 getData(), setData()를 사용한다.
+
+- 액티비티 명세 예제.
+
+```xml
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/telText"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:editable="true"
+        android:inputType="phone"/>
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="mOnClick"
+        android:text="CALL"/>
+</LinearLayout>
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button callButton = (Button)findViewById(R.id.callButton);
+        callButton.setOnClickListener(new View.OnClickListener()) {
+            @Override
+            public void onClick(View view) {
+                EditText telText = (EditText)findViewById(R.id.telText);
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + telText.getText()));
+                startActivity(intent);
+            }
+        }
+    }
+}
+```
+
+# 12강. 프래그먼트
+
+## 프래그먼트 1
+
+프래그먼트(Fragment)는 하나의 액티비티를 분할하여 개별적인 목적에 맞는 특정 기능들을 수행하며, 스마트폰의 일부분을 차지한다. 하나의 화면에서 여러 프래그먼트들을 사용하여 풍족한 인터페이스를 제공받을 수 있다.
+
+프래그먼트는 재사용이 가능하며, 생명주기가 서브 액티비티와 같이 결합된 액티비티에 종속된다.
+
+프래그먼트 매니저(Fragment Manager)는 액티비티와 프래그먼트 사이의 중계자 역할을 수행하며 추가, 변경, 삭제에 대한 기능을 제공한다. setContentView()가 아닌 inflate() 메소드를 사용한다.
+
+프래그먼트는 직접적으로 데이터 통신을 수행할 수 없으며, 액티비티를 통해서 통신을 수행해야 한다. 통신 종류는 다음과 같다.
+
+- 인터페이스 기반 프래그먼트 통신
+- 프래그먼트 전용 요청 API 통신
+- 프래그먼트 간의 뷰 모델 통신
+
+## 프래그먼트 2
+
+액티비티와 프래그먼트는 다음 차이점을 가지고 있다.
+
+| 액티비티                                           | 프래그먼트                                            |
+| -------------------------------------------------- | ----------------------------------------------------- |
+| 사용자가 상호작용할 수 있는 인터페이스를 제공한다. | 액티비티의 일부분으로 부분적 UI를 제공한다.           |
+| 종속적이지 않고, 독립적인 수행이 가능하다.         | 액티비티에 종속적이고, 독립적으로 수행할 수 없다.     |
+| 액티비티 매니저를 통해서 관리한다.                 | 프래그먼트 매니저를 통해서 관리한다.                  |
+| 액티비티 만으로 멀티스크린 UI를 만들 수 없다.      | 여러 프래그먼트를 사용하여 멀티스크린을 만들 수 있다. |
+| 사용 전에 매니페스트에 등록해야 한다.              | 사전에 매니페스트에 언급되지 않는다.                  |
+| 시스템의 백 스택을 관리하여 개발자의 개입이 적다.  | 백 스택에 저장되지 않아 개발자의 개입이 필요하다.     |
+| 액티비티는 재사용이 불가능하다.                    | 프래그먼트는 재사용이 가능하다.                       |
+| 프래그먼트 대비 무거운 성능을 갖는다.              | 액티비티 대비 가벼운 성능을 갖는다.                   |
+
+프래그먼트는 전체적으로 세 가지 단계로 나눌 수 있다.
+
+- 액티비티에 프래그먼트가 선언되고 초기화되는 추가 단계.
+- 정의된 동작을 수행하는 프래그먼트 실행 단계.
+- 프래그먼트 동작을 완료하고 종료되는 시점인 종료 단계.
+
+프래그먼트 상태 관리 메소드는 다음과 같다.
+
+| 메소드              | 설명                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| onAttach()          | 프래그먼트가 액티비티에 붙을 때, 리소스를 가져다 쓸 때 오버라이드하여 사용한다.      |
+| onCreate()          | 프래그먼트가 생성될 때, 재시작될 때 초기화에 사용한다.                               |
+| onCreateView()      | View를 인스턴스화하며, UI 관련 값을 초기화한다.                                      |
+| onActivityCreated() | 부모 액티비티의 onCreate()가 종료된 후 실행된다.                                     |
+| onStart()           | 액티비티가 시작된 사앹에서 호출되고, UI를 관리하는 코드 또는 값을 초기화한다.        |
+| onResume()          | 프로그래밍이 일시 중지되어 onPause()를 호출하고 재시작할 때 초기화 작업을 수행한다.  |
+| onPause()           | 화면이 중지되거나, 사용자가 프래그먼트를 떠나면 호출된다.                            |
+| onStop()            | 다른 액티비티에 의해서 화면에 보이지 않을 때 필요가 없는 기능을 모두 중지한다.       |
+| onDestroy()         | 액티비티, 프래그먼트가 소멸되기 전에 호출된다. 해제되지 않은 리소스를 해제해야 한다. |
+| onDestroyView()     | 프래그먼트와 관련된 View가 제거된다.                                                 |
+| onDetach()          | 프래그먼트가 액티비티로부터 해제될 때 호출된다.                                      |
+
+- 프래그먼트 예제 1.
+
+```java
+// FragmentFirst.java
+public class FragmentFirst extends Fragment {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_first, container, false);
+    }
+}
+
+// FragmentSecond.java
+public class FragmentSecond extends Fragment {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_first, container, false);
+    }
+}
+
+// MainActivity.java
+public class MainActivity extends AppCompatActivity {
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+    }
+
+    public void showFragment(View view) {
+        fragmentTransaction = fragmentManager.beginTransaction();
+        if(view == findViewById(R.id.button1)) {
+            FragmentFirst fragmentFirst = new FragmentFirst();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentFirst);
+            fragmentTransaction.commit();
+        }else {
+            FragmentSecond fragmentSecond = new FragmentSecond();
+            fragmentTransaction.replace(R.id.fragment_container, fragmentSecond);
+            fragmentTransaction.commit();
+        }
+    }
+}
+```
+
+## 프래그먼트 통신
+
+- 프래그먼트 예제 2.
+
+```xml
+<!-- fragment_top.xml -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[TOP 프래그먼트]"/>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="메시지 대기중"/>
+</LinearLayout>
+
+<!-- fragment_bottom.xml -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[BOTTOM 프래그먼트]"/>
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="메시지를 작성하시오"/>
+    <Button
+        android:id="@+id/btn_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="메시지 전송"/>
+</LinearLayout>
+
+<!-- activity_main.xml -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".MainActivity">
+    <FrameLayout
+        android:id="@+id/TopFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FF1E1E"/>
+    <FrameLayout
+        android:id="@+id/BottomFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"/>
+</LinearLayout>
+```
+
+```java
+// TopFragment.java
+public class TopFragment extends Fragment {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_top, container, false);
+    }
+    public void setText(CharSequence text) {
+        TextView textView = (TextView)getView().findViewById(R.id.textView);
+        textView.setText(text);
+    }
+}
+
+// BottomFragment.java
+public class BottomFragment extends Fragment {
+    private BottomListener bottomListener;
+    private EditText editText;
+    private Button button;
+
+    public interface BottomListener {
+        void BottomSender(CharSequence input);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+       View view = inflater.inflate(R.layout.fragment_bottom, container, false);
+       editText = view.findViewById(R.id.edit_text);
+       button = view.findViewById(R.id.btn_send);
+       button.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            CharSequence input = editText.getText();
+            bottomListener.BottomSender(input);
+        }
+       });
+       return view;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof BottomListener) {
+            bottomListener = (BottomListener) context;
+        }else {
+            throw new RuntimeException(context.toString() + " must implement FragmentBottomListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        bottomListener = null;
+    }
+}
+
+// MainActivity.java
+public class MainActivity extends AppCompatActivity implements BottomFragment, BottomListener {
+    BottomFragment.BottomListener {
+        TopFragment topFragment;
+        BottomFragment bottomFragment;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            topFragment = new TopFragment();
+            bottomFragment = new BottomFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.TopFrame, topFragment)
+                    .replace(R.id.BottomFrame, bottomFragment)
+                    .commit();
+        }
+
+        @Override
+        public void BottomSender(CharSequence input) {
+            topFragment.setText(input);
+        }
+    }
+}
+```
