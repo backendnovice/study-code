@@ -1215,3 +1215,467 @@ public class MainActivity extends Activity {
     }
 }
 ```
+
+# 9강. 이벤트 처리 1
+
+## 이벤트 핸들러
+
+이벤트 핸들러는 사용자의 터치 반응이나 시스템 구성요소에서 발생하는 이벤트를 처리하는 주체이다.
+
+콜백 메소드(Callback Method)는 특정 이벤트가 발생할 때 자동으로 호출되어 실행하는 메소드이다.
+
+| 메소드명         | 설명                                                   |
+| ---------------- | ------------------------------------------------------ |
+| onTouchEvent     | 화면을 터치했을 때 호출되는 메소드.                    |
+| onKeyDown        | 키를 누른 상태에서 뗄 때 호출되는 메소드.              |
+| onKeyUp          | 키를 뗄 때 호출되는 메소드.                            |
+| onTrackballEvent | 트랙볼이 사용될 때 호출되는 메소드.                    |
+| onFocusChanged   | 해당 View의 포커스에 변화가 발생할 때 호출되는 메소드. |
+
+- 콜백 메소드 예제.
+
+```java
+public class MainActivity extends Activity {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View view = new CustomView(this);
+        setContentView(view);
+    }
+
+    class CustomView extends View {
+        public CustomView(Context context) {
+            super(context);
+        }
+        // onTouchEvent를 구현하여 터치 이벤트를 커스텀.
+        public boolean onTouchEvent(MotionEvent event) {
+            super.onTouchEvent(event);
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                Toast.makeText(MainActivity.this, "Touch Event Received", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            return false;
+        }
+    }
+}
+```
+
+이벤트 리스너(Event Listener)는 특정 이벤트를 처리하는 인터페이스이다. View에 의존하는 콜백 메소드 방식과 달리 범용적이며, 제한되지 않는다.
+
+| 이벤트 리스너              | 콜백 메소드   | 설명                                |
+| -------------------------- | ------------- | ----------------------------------- |
+| View.OnTouchListener       | onTouch       | 사용자가 View를 터치할 때 호출된다. |
+| View.OnKeyListener         | onKey         | 키를 누르거나 땔 때 호출된다.       |
+| View.OnClickListener       | onClick       | View를 클릭할 때 호출된다.          |
+| View.OnLongClickListener   | onLongClick   | View를 길게 클릭할 때 호출된다.     |
+| View.OnFocusChangeListener | onFocusChange | 포커스가 변경될 때 호출된다.        |
+| View.OnDragListener        | onDrag        | View가 드래그할 때 호출된다.        |
+
+- 이벤트 리스너 예제. (인터페이스 구현)
+
+```java
+public class MainActivity extends Activity {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View view = new View(this);
+        view.setOnTouchListener(touchListener); // OnTouch 리스너 등록.
+        setContentView(view);
+    }
+
+    // OnTouchListener 구현.
+    class TouchListenerClass implements View.OnTouchListener {
+        public boolean onTouch(View view, MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                Toast.makeText(MainActivity.this, "Touch Event Received", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            return false;
+        }
+    }
+
+    // OnTouch 리스너 객체 생성.
+    TouchListenerClass touchListener = new TouchListenerClass();
+}
+```
+
+- 이벤트 리스너 예제. (액티비티 구현)
+
+```java
+public class MainActivity extends Activity implements View.OnTouchListener {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View view = new View(this);
+        view.setOnTouchListener(this);
+        setContentView(view);
+    }
+
+    public boolean onTouch(View view, MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            Toast.makeText(this, "Touch Event Received", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+- 이벤트 리스너 예제. (View)
+
+```java
+public class MainActivity extends Activity {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CustomView view = new CustomView(this);
+        view.setOnTouchListener(view);
+        setContentView(view);
+    }
+
+    class CustomView extends View implements View.OnTouchListener {
+        public CustomView(Context context) {
+            super(context);
+        }
+        public boolean onTouch(View view, MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                Toast.makeText(MainActivity.this, "Touch Event Received", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            return false;
+        }
+    }
+}
+```
+
+## 안드로이드 프레임워크의 구조
+
+안드로이드 프레임워크는 기본적으로 다음 구조로 구성된다.
+
+| 구조명               | 설명                                                        | 비고                               |
+| -------------------- | ----------------------------------------------------------- | ---------------------------------- |
+| 시스템 앱            | 사용자를 위한 앱으로 기본 구성 앱.                          | Dialer, Email, Calaender, Camera   |
+| JAVA API             | 앱이 사용하는 프레임워크, 클래스, 메소드에 대한 라이브러리. | Content Providers, View, Managers  |
+| C/C++ 라이브러리     | C/C++ 네이티브 코드를 기반 빌드 제공. OpenGL API 지원.      | Webkit, OpenGL ES, Media Framework |
+| 안드로이드 런타임    | 안드로이드 컴파일러, 실행환경을 제공.                       | Android Runtime, Core Libraries    |
+| 하드웨어 추상화 계층 | API 프레임워크에 하드웨어 기능을 노출하는 표준 인터페이스.  | Audio, Bluetooth, Camera, Sensors  |
+| Linux 커널           | 메모리, 프로세스, 네트워크, 드라이버를 관리하는 OS 커널.    | Linux Kernel, Power Management     |
+
+# 10강. 이벤트 처리 2
+
+## 터치 입력
+
+사용자가 레이아웃을 터치하면서 발생하는 사용자 이벤트를 처리하는 방법이다.
+
+- 터치 그림판 예제.
+
+```java
+public class MainActivity extends Activity {
+    private MyView view;
+
+    public class Vertex {
+        Vertex(float ax, float ay, boolean ad) {
+            x = ax;
+            y = ay;
+            Draw = ad;
+        }
+        float x;
+        float y;
+        boolean Draw;
+    }
+
+    ArrayList<Vertex> arVertex;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        view = new MyView(this);
+        setContentView(view);
+        arVertex = new ArrayList<Vertex>();
+    }
+
+    protected class MyView extends View {
+        Paint paint;
+
+        public MyView(Context context) {
+            super(context);
+            paint = new Paint();
+            paint.setColor(Color.BLUE);
+            paint.setStrokeWidth(3);
+            paint.setAntiAlias(true);
+        }
+
+        public void onDraw(Canvas canvas) {
+            int i;
+            canvas.drawColor(Color.LTGRAY);
+            for(i = 0; i < arVertex.size(); i++) {
+                if(arVertex.get(i).Draw) {
+                    canvas.drawLine(arVertex.get(i - 1).x, arVertex.get(i - 1).y, arVertex.get(i).x, arVertex.get(i).y, paint);
+                }
+            }
+        }
+
+        public boolean onTouchEvent(MotionEvent event) {
+            if(event.getAction() == MotionEvent.ACTION_DOWN) {
+                arVertex.add(new Vertex(event.getX(), event.getY(), false));
+                return true;
+            }
+            if(event.getAction() == MotionEvent.ACTION_MOVE) {
+                arVertex.add(new Vertex(event.getX(), event.getY(), true));
+                return true;
+            }
+            return false;
+        }
+    }
+}
+```
+
+## 키보드 입력
+
+사용자가 키보드를 통해 입력할 때 발생하는 사용자 이벤트를 처리하는 방법이다. Key 코드를 인수로서 사용한다.
+
+| 동작                | 설명                      |
+| ------------------- | ------------------------- |
+| KEYCODE_DPAD_LEFT   | 왼쪽 이동키               |
+| KEYCODE_DPAD_RIGHT  | 오른쪽 이동키             |
+| KEYCODE_DPAD_UP     | 위쪽 이동키               |
+| KEYCODE_DPAD_DOWN   | 아래쪽 이동키             |
+| KEYCODE_DPAD_CENTER | 중앙쪽 이동키             |
+| KEYCODE_A ~ Z       | 알파벳 A ~ Z              |
+| KEYCODE_0 ~ 9       | 숫자 0 ~ 9                |
+| KEYCODE_CALL        | 통화                      |
+| KEYCODE_ENDCALL     | 통화 종료                 |
+| KEYCODE_HOME        | 홈                        |
+| KEYCODE_BACK        | 뒤로                      |
+| KEYCODE_VOLUME_UP   | 볼륨 증가                 |
+| ACTION_DOWN         | 키를 누른 상태            |
+| ACTION_UP           | 키를 뗀 상태              |
+| ACTION_MULTIPLE     | 동일키를 여러번 누른 상태 |
+
+- 키보드 입력 처리 예제.
+
+```java
+public class MainActivity extends Activity {
+    private MyView view;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        view = new MyView(this);
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        setContentView(view);
+    }
+
+    protected class MyView extends View {
+        float mX, mY, mR, mL;
+        int mColor;
+
+        public MyView(Context context) {
+            super(context);
+            mX = 500;
+            mY = 500;
+            mR = 600;
+            mL = 600;
+            mColor = Color.RED;
+        }
+
+        public void onDraw(Canvas canvas) {
+            canvas.drawColor(Color.WHITE);
+            Paint paint = new Paint();
+            paint.setColor(mColor);
+            paint.setAntiAlias(true);
+            canvas.drawRect(mX, mY, mR, mL, paint);
+        }
+
+        public boolean onKeyDown(int keyCode, KeyEvent event) {
+            super.onKeyDown(keyCode, event);
+            // getAction(): 동작을 가져온다.
+            if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                switch(keyCode) {
+                    case KeyEvent.KEYCODE_DPAD_LEFT:
+                        mX -= 5;
+                        mR -= 5;
+                        invalidate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_RIGHT:
+                        mX += 5;
+                        mR += 5;
+                        invalidate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_UP:
+                        mY -= 5;
+                        mL -= 5;
+                        invalidate();
+                        return true;
+                    case KeyEvent.KEYCODE_DPAD_DOWN:
+                        mY += 5;
+                        mL += 5;
+                        invalidate();
+                        return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public void setFocusable(boolean b) {
+
+    }
+}
+```
+
+## 위젯 이벤트
+
+위젯도 View들을 비교하여 이벤트를 처리하는 방법은 동일하지만, 한 번에 모아서 처리하는 것이 효율적이다.
+
+- 위젯 이벤트 처리 예제.
+
+```java
+public class MainActivity extends AppCompatActivity {
+    public void onCreatee(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.app_10_3);
+
+        // good 버튼 이벤트 처리.
+        Button buttonGood = (Button)findViewById(R.id.good);
+        buttonGood.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View view) {
+                TextView textPool = (TextView)findViewById(R.id.question);
+                textPool.setText("Good!!^^");
+            }
+        });
+
+        // bad 버튼 이벤트 처리.
+        Button buttonBad = (Button)findViewById(R.id.bad);
+        buttonBad.setOnClickListener(new Button.OnCLickListener() {
+            public void onClick(View view) {
+                TextView textPool = (TextView)findViewById(R.id.question);
+                textPool.setText("Bad~~ㅠㅠ");
+            }
+        });
+    }
+}
+```
+
+- 위젯 이벤트 처리 예제. (통합)
+
+```java
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // good 버튼 리스너 등록.
+        Button buttonGood = (Button)findViewById(R.id.good);
+        buttonGood.setOnClickListener(this);
+
+        // bad 버튼 리스너 등록.
+        Button buttonBad = (Button)findViewById(R.id.bad);
+        buttonBad.setOnClickListener(this);
+    }
+
+    public void onClick(View view) {
+        TextView textPool = (TextView)findViewById(R.id.question);
+        switch(view.getId()) {
+            case R.id.good:
+                textPool.setText("Good!!^^");
+                break;
+            case R.id.bad:
+                textPool.setText("Bad~~ㅠㅠ");
+                break;
+        }
+    }
+}
+```
+
+## 타이머 이벤트
+
+안드로이드 플랫폼은 특정 시간을 간격으로 함수를 주기적으로 실행하는 타이머 이벤트를 지원한다.
+
+- 타이머 이벤트 처리 예제.
+
+```java
+public class MainActivity extends AppCompatActivity {
+    int value = 0;
+    TextView mText;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.app_10_6);
+        mText = (TextView)findViewById(R.id.text);
+        mHandler.sendEmptyMessage(0);
+    }
+
+    Handler mHandler = new Handler() {
+        public void handleMessage(Message message) {
+            value.setText("Timer Value = " + value);
+            mHandler.sendEmptyMessageDelayed(0, 1000);
+        }
+    };
+}
+```
+
+## 방향 이벤트
+
+안드로이드 플랫폼은 가속도, 회전, 조도 센서 등의 다양한 종류의 센서를 다루는 API를 지원한다.
+
+| 클래스 및 인터페이스명 | 설명                               | 종류      |
+| ---------------------- | ---------------------------------- | --------- |
+| SensorManager          | 센서에 접근하는 메소드를 제공한다. | Class     |
+| Sensor                 | 센서의 객체를 선언한다.            | Class     |
+| SensorEventListener    | 이벤트 형태의 센서값을 처리한다.   | Interface |
+| SensorEvent            | 센서값을 갖고 접근할 수 있다.      | Class     |
+
+- 화면 전환 처리 예제.
+
+```xml
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/orientation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="초기 상태"/>
+        <TextView
+            android:id="@+id/arrow"
+            android:layout_width="match_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="†"/>
+    </LinearLayout>
+</RelativeLayout>
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+    OrientationEventListener mOrientationListener;
+    TextView mDir;
+    TextView mArrow;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mDir = (TextView)findViewById(R.id.orientation);
+        mArrow = (TextView)findViewById(R.id.arrow);
+        mOrientationListener = new OrientationEventListener(this, SensorManager.SENSOR_DELAY_NORMAL) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                mDir.setText("회전 값: " + String.valueOf(orientation));
+                if(orientation >= 315 || orientation < 45) {
+                    mArrow.setRotation(0);
+                }else if(orientation >= 45 && orientation < 135) {
+                    mArrow.setRotation(270);
+                }else if(orientation >= 135 && orientation < 225) {
+                    mArrow.setRotation(180);
+                }else if(orientation >= 225 && orientation < 315) {
+                    mArrow.setRotation(90);
+                }
+            }
+        };
+        mOrientationListener.enable();
+    }
+}
+```
