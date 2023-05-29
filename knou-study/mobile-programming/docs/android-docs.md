@@ -2096,3 +2096,454 @@ public class MainActivity extends AppCompatActivity implements BottomFragment, B
     }
 }
 ```
+
+# 13강. AdapterView
+
+## AdapterView
+
+AdapterView는 자료구조 및 데이터베이스의 데이터를 활용하여 위젯을 구성하는 View이다. 전달받은 데이터의 유형에 따라서 다양한 자식 View로 세분화할 수 있다.
+
+ArrayList를 사용하는 ArrayAdapter의 초기화 방법은 다음과 같다.
+
+```java
+/*
+    ArrayAdapter 초기화 매개변수.
+    context: AdapterView를 출력하는 액티비티의 Context.
+    textViewResourceId: 표현 방법을 결정하는 리소스 ID.
+    objects: Adapter의 입력으로 전달되는 데이터 객체.
+*/
+Adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, arGeneral);
+```
+
+## ListView
+
+ListView는 여러 개의 항목들을 수직으로 표시하는 위젯이다. 수직 스크롤을 지원하며 표시되는 항목의 개수에는 제한이 없다.
+
+ListView는 여러 기본 레이아웃들이 존재하며 아래 표와 같다.
+
+| 리소스ID                         | 설명                                        |
+| -------------------------------- | ------------------------------------------- |
+| simple_list_item_1               | 하나의 TextView로 구성된 레이아웃.          |
+| simple_list_item_2               | 둘의 TextView로 구성된 레이아웃.            |
+| simple_list_item_checked         | 오른쪽에 체크 버튼이 나타난다.              |
+| simple_list_item_single_choice   | 오른쪽에 라디오 버튼이 나타난다.            |
+| simple_list_item_multiple_choice | 여러 개 선택이 가능한 체크 버튼이 나타난다. |
+
+- ListView 화면 예제.
+
+```xml
+<!-- activity_main.xml -->
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+```
+
+```java
+// MainActivity.java
+public class MainActivity extends Activity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // 과일명을 저장하기 위한 리스트 생성.
+        ArrayList<String> fruits = new ArrayList<String>();
+        fruits.add("APPLE");
+        fruits.add("BANANA");
+        fruits.add("ORANGE");
+        fruits.add("MANGO");
+
+        // 리스트와 뷰를 연결해줄 어댑터 생성.
+        ArrayAdapter<String> adapter;
+        adapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_checked, fruits);
+
+        // 뷰를 생성하고 어댑터 적용.
+        ListView listView = (ListView)findViewById(R.id.list);
+        listView.setAdapter(adapter);
+    }
+}
+```
+
+ArrayList와 같은 자료구조는 항목들에 변화가 있을 때 사용하곤 한다. 만약 리소스로 사용하는 항목들에 변화가 없을 경우, 별도의 xml 파일을 사용하는 게 유리하다.
+
+- 리소스 파일 활용 예제.
+
+```xml
+<!-- arrays.xml -->
+<resources>
+    <string-array name="mobile"> <!-- 배열 리소스 명칭. -->
+        <item>Application</item> <!-- 배열 요소 정의. -->
+        <item>Activity</item>
+        <item>Intent</item>
+        <item>Layout</item>
+        (...)
+    </string-array>
+</resources>
+```
+
+```java
+// MainActivity.java
+public class MainActivity extends Activity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // array/mobile.xml을 리소스로 어댑터를 생성.
+        ArrayAdapter<CharSequence> adapter;
+        adapter = ArrayAdapter.createFromResource // 생성자가 아닌 별도의 메소드 사용.
+                (this, R.array.mobile, android.R.layout.simple_list_item_1);
+
+        // 뷰를 생성하고 어댑터 적용.
+        ListView listView = (ListView)findViewById(R.id.list);
+        list.setAdapter(Adapter);
+    }
+}
+```
+
+choiceMode 속성은 ListView안의 View를 선택하는 형식을 setChoiceMode()를 사용하여 정의한다.
+
+choiceMode의 속성값은 아래 표와 같다.
+
+| 속성값         | 인수                 | 설명                   |
+| -------------- | -------------------- | ---------------------- |
+| none           | CHOICE_MODE_NONE     | 항목 선택 불가능.      |
+| singleChoice   | CHOICE_MODE_SINGLE   | 하나의 항목 선택 가능. |
+| multipleChoice | CHOICE_MODE_MULTIPLE | 여러 항목 선택 가능.   |
+
+divider 속성은 항목 사이의 구분선을 지정하는 속성으로, 색상이나 Drawable 객체를 setDivider()을 사용하여 지정할 수 있다.
+
+- 선택 및 구분선 옵션 적용 예제.
+
+```java
+// MainActivity.java
+public class MainActivity extends Activity {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ArrayAdapter<CharSequence> adapter;
+        adapter = ArrayAdapter.createFromResource(
+            this, R.array.mobile, android.R.layout.simple_list_item_multiple_choice);
+
+        ListView listView = (ListView)findViewById(R.id.list);
+        listView.setAdapter(adapter);
+
+        // 동시 선택, 구분선 색상 파란색, 높이 5.
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setDivider(new ColorDrawable(Color.BLUE));
+        listView.setDividerHeight(5);
+    }
+}
+```
+
+## Spinner
+
+Spinner는 클릭할 때만 팝업 형식으로 펼쳐지는 위젯이다. 보통 여러 개의 항목 중에 하나만을 선택할 때 사용되며, 화면에 제약이 있는 스마트폰에 적합하다.
+
+Spinner의 레이아웃은 setDropDownViewResource()를 사용하여 지정할 수 있으며, 기본 레이아웃은 아래 표와 같다.
+
+| 리소스ID                     | 설명                                           |
+| ---------------------------- | ---------------------------------------------- |
+| simple_spinner_item          | 항목명만을 표시하는 레이아웃.                  |
+| simple_spinner_dropdown_item | 항목명과 라디오 버튼이 같이 표시되는 레이아웃. |
+
+Spinner는 선택한 항목에 대한 Prompt 메시지를 팝업 상단에 표시할 수 있다. 주요 메소드는 아래 표와 같다.
+
+| 메소드명      | 설명                              |
+| ------------- | --------------------------------- |
+| setPromptId() | 리소스 ID를 Prompt 내용으로 지정. |
+| setPrompt()   | 문자열을 Prompt 내용으로 지정.    |
+
+Spinner의 item 선택을 변경하면 다음 메소드가 호출된다.
+
+| 메소드명          | 설명                       |
+| ----------------- | -------------------------- |
+| onItemSelected    | 항목이 선택될 때 호출.     |
+| onNothingSelected | 항목이 선택 해제되면 호출. |
+
+- Spinner 활용 예제.
+
+```xml
+<!-- arrays.xml -->
+<resources>
+    <string-array name="colors">
+        <item>검정색</item>
+        <item>흰색</item>
+        <item>회색</item>
+        (...)
+    </string-array>
+</resources>
+
+<!-- activity_main.xml -->
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/my_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="원하는 색상 선택"/>
+    <Spinner
+        android:id="@+id/my_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"/> <!-- 대화상자 유형. -->
+</LinearLayout>
+```
+
+```java
+// MainActivity.java
+public class MainActivity extends Activity {
+    ArrayAdapter<CharSequence> adapter;
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Spinner 객체 생성 및 프롬프트 설정.
+        Spinner spinner = (Spinner)findViewById(R.id.my_spinner);
+        spinner.setPrompt("Prompt");
+
+        // 어댑터 초기화 및 드롭다운 레이아웃 지정.
+        adapter = ArrayAdapter.createFromResource(
+            this, R.array.colors, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(
+            android.R.layout.simple_spinner_dropdown_item);
+
+        // Spinner에 어댑터 적용.
+        spinner.setAdapter(adapter);
+
+        // 항목 선택 여부의 리스너 메소드 설정.
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            // 선택된 항목 토스트 메시지 출력.
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, adapter, getItem(position), Toast.LENGTH_SHORT).show();
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {}
+        })
+    }
+}
+```
+
+# 14강. 대화상자
+
+## AlertDialog
+
+AlertDialog는 사용자에게 특정 메시지를 출력하고 의사를 전달받을 수 있는 인터페이스를 제공하는 위젯이다.
+
+AlertDialog는 protected 객체이므로, 별도의 Builder 패턴의 메소드를 사용해서 설정을 수행해야 한다. 주요 메소드는 아래 표와 같다.
+
+| 메소드명     | 설명                                                                                     |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| setMessage() | 메시지 내용을 설정한다.                                                                  |
+| setTitle()   | 메시지 제목을 설정한다.                                                                  |
+| setIcon()    | 메시지 아이콘을 설정한다.                                                                |
+| setButton()  | 메시지 버튼을 설정한다. Positive(왼쪽), Neutral(중앙), Negative(오른쪽) 순으로 배치된다. |
+| create()     | AlertDialog 객체를 생성한다.                                                             |
+| show()       | AlertDialog 객체를 출력한다.                                                             |
+
+- AlertDialog 활용 예제.
+
+```xml
+<!-- activity)main.xml -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click Dialog Button."/>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="CALL DIALOG"/>
+</LinearLayout>
+```
+
+```java
+// MainActivity.java
+public class MainActivity extends Activity {
+    public void onCreate(Bundle savedInstacnceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout_activity_main);
+    }
+
+    // 버튼 클릭 호출 메소드.
+    public void onClickButton(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+            .setTitle("Message Title");
+            .setMessage("Message Content");
+            .setIcon(R.mipmap.ic_launcher);
+            .setPositiveButton("CLOSE" new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface, int which) {}
+            })
+            .show();
+    }
+}
+```
+
+## DatePickerDialog
+
+DatePickerDialog는 손쉽게 날짜 정보를 입력할 수 있는 인터페이스를 제공하는 위젯이다.
+
+- DatePickerDialog 생성자.
+
+```java
+/*
+    context: Activity의 콘텍스트.
+    listener: 확인 버튼 클릭 시 연결되는 리스너.
+    year, monthOfYear, dayOfMonth: 년, 월, 일의 속성값.
+*/
+
+public DatePickerDialog(Context context, DatePickerDialog.OnDateSetListener listener, int year, int monthOfYear, int dayOfMonth)
+```
+
+- DatePickerDialog 활용 예제.
+
+```xml
+<!-- activity_main.xml -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickButton"
+        android:text="날짜 설정"/>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
+```
+
+```java
+// MainActivity.java
+public class MainActivity extends AppCompatActivity {
+    Button button;
+    DatePickerDialog dialog;
+    TextView textView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        button = (Button)findViewById(R.id.button);
+        textView = (TextView)findViewById(R.id.text);
+    }
+
+    public void onClick(View view) {
+        if(view == button) {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // 날짜 선택 대화상자 객체를 생성한다.
+            dialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    // 날짜를 선택하면 TextView에 저장한다.
+                    @Override
+                    public void onDateSet(
+                        DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            testView.setText(dayOfMonth + "/" +
+                                (monthOfYear + 1) + "/" + year);
+                    }
+            }, year, month, day);
+        }
+
+        dialog.show();
+    }
+}
+```
+
+## TimePickerDialog
+
+TimePickerDialog는 손쉽게 시간 정보를 입력할 수 있는 인터페이스를 제공하는 위젯이다.
+
+TimePicker의 레이아웃 유형은 아래 표의 timePickerMode 속성을 통해 지정한다.
+
+| 속성명  | 설명                               |
+| ------- | ---------------------------------- |
+| clock   | 시계 모양의 대화상자를 표시한다.   |
+| spinner | 스피너 형태의 대화상자를 표시한다. |
+
+- TimePickerDialog 활용 예제.
+
+```xml
+<!-- activity_main.xml -->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TimePicker
+        android:id="@+id/time_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:timePickerMode="clock"/> <!-- 시계 모양을 선택. -->
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select"/>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[time]"/>
+</LinearLayout>
+```
+
+```java
+public class MainActivity extends AppCompatActivity {
+    TimePicker timePicker;
+    TextView textView;
+    Button button;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // 현재 시스템 시간을 TimePicker에 반영한다.
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+
+            timePicker = findViewById(R.id.time_picker);
+            timePicker.setHour(hour);
+            timePicker.setMinute(minute);
+        }
+
+        // 버튼을 클릭하면 선택한 시간정보를 TextView에 저장한다.
+        button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int hour = timePicker.getHour();
+                    int minute = timePicker.getMinute();
+
+                    text = findViewById(R.id.text);
+                    text.setText("[time] " + hour + ":" + minute);
+                }
+            }
+        });
+    }
+}
+```
