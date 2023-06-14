@@ -40,4 +40,14 @@ public class SortTest {
         
         assertArrayEquals(object.sort(array, false), RESULT_DESC);
     }
+    
+    @Test
+    void sortQuickTest() {
+        int[] array = new int[]{7, 4, 5, 1, 3};
+        
+        QuickSort object = new QuickSort();
+        object.sort(array, 0, array.length - 1);
+        
+        assertArrayEquals(array, RESULT_ASC);
+    }
 }
