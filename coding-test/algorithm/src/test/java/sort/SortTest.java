@@ -12,41 +12,51 @@ public class SortTest {
     void sortBubbleTest() {
         int[] array = new int[]{7, 4, 5, 1, 3};
         
-        BubbleSort object = new BubbleSort();
+        BubbleSort program = new BubbleSort();
         
-        assertArrayEquals(object.sort(array, true), RESULT_ASC);
+        assertArrayEquals(program.sort(array, true), RESULT_ASC);
         
-        assertArrayEquals(object.sort(array, false), RESULT_DESC);
+        assertArrayEquals(program.sort(array, false), RESULT_DESC);
     }
     
     @Test
     void sortSelectionTest() {
         int[] array = new int[]{7, 4, 5, 1, 3};
         
-        SelectionSort object = new SelectionSort();
+        SelectionSort program = new SelectionSort();
         
-        assertArrayEquals(object.sort(array, true), RESULT_ASC);
+        assertArrayEquals(program.sort(array, true), RESULT_ASC);
         
-        assertArrayEquals(object.sort(array, false), RESULT_DESC);
+        assertArrayEquals(program.sort(array, false), RESULT_DESC);
     }
     
     @Test
     void sortInsertionTest() {
         int[] array = new int[]{7, 4, 5, 1, 3};
         
-        InsertionSort object = new InsertionSort();
+        InsertionSort program = new InsertionSort();
         
-        assertArrayEquals(object.sort(array, true), RESULT_ASC);
+        assertArrayEquals(program.sort(array, true), RESULT_ASC);
         
-        assertArrayEquals(object.sort(array, false), RESULT_DESC);
+        assertArrayEquals(program.sort(array, false), RESULT_DESC);
     }
     
     @Test
     void sortQuickTest() {
         int[] array = new int[]{7, 4, 5, 1, 3};
         
-        QuickSort object = new QuickSort();
-        object.sort(array, 0, array.length - 1);
+        QuickSort program = new QuickSort();
+        program.sort(array, 0, array.length - 1);
+        
+        assertArrayEquals(array, RESULT_ASC);
+    }
+    
+    @Test
+    void sortMergeTest() {
+        int[] array = new int[]{7, 4, 5, 1, 3};
+        
+        MergeSort program = new MergeSort();
+        program.sort(array);
         
         assertArrayEquals(array, RESULT_ASC);
     }
